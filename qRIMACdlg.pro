@@ -25,10 +25,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        qrimacdlg.cpp
+        qrimacdlg.cpp \
+
 
 HEADERS += \
-        qrimacdlg.h
+        qrimacdlg.h \
+
 
 FORMS += \
-        qrimacdlg.ui
+        qrimacdlg.ui \
+

@@ -28,6 +28,7 @@
 #include "qRIMACPlugin.h"
 #include "qrimacdlg.h"
 
+
 //qCC
 #include "ccGLWindow.h"
 #include "ccPickingHub.h"
@@ -95,6 +96,7 @@ void qRIMACPlugin::doAction()
             dlg->win = win;
             dlg->m_app = m_app;
             dlg->show();
+
         }
 	//This is how you can output messages
         //m_app->dispToConsole("[qRIMACPlugin] Hello world!",ccMainAppInterface::STD_CONSOLE_MESSAGE); //a standard message is displayed in the console
