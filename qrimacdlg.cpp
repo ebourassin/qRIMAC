@@ -7,16 +7,26 @@
 
 //qCC
 #include <ccGLWindow.h>
-
 #include "qrimacdlg.h"
 #include "ui_qrimacdlg.h"
 #include "ccclassification.h"
+#include "ccWorkSite.h"
+
+//Qt
+#include "qfiledialog.h"
+#include <QString>
+#include <QFile>
+#include <QXmlStreamReader>
+#include <QListWidgetItem>
+#include <QImageReader>
 
 qRIMACdlg::qRIMACdlg(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::qRIMACdlg)
 {
     ui->setupUi(this);
+
+
 
     //Connexion of butons
     QObject::connect(ui->lancer,SIGNAL(released()),this,SLOT(lancer()));
@@ -35,11 +45,14 @@ void qRIMACdlg::lancer()
 
    //QDir::homePath() : In order to be able work on several computer and several environment
    QString dirImgStr = QFileDialog::getExistingDirectory(this, tr("Sélectionner le dossier contenant les images"),
-                                                                  QDir::homePath(),
-                                                                  QFileDialog::ShowDirsOnly
-                                                                  | QFileDialog::DontResolveSymlinks);
+                                                                QDir::homePath(),
+                                                                QFileDialog::ShowDirsOnly
+                                                                | QFileDialog::DontResolveSymlinks);
 
    }
+
+   //this->currentWorkSite->initialise(dirImgStr);
+  // ui->label_img->setText(dirImgStr);
 
 
 
