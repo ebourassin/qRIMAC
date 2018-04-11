@@ -28,11 +28,13 @@ qRIMACdlg::~qRIMACdlg()
 
 void qRIMACdlg::lancer()
 {
-    // Loading of folders containing the images and the XML files of parameters
-   std::cout<<"Loading folders containning images and files of parameters..."<<std::endl;
+
+   m_app->dispToConsole("Lancer le transfert d'attributs!",ccMainAppInterface::STD_CONSOLE_MESSAGE);
+
+   }
 
 
-}
+
 /*
 void qRIMACdlg::select_cloud()
 {
