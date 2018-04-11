@@ -4,11 +4,13 @@
 #include <typeinfo>
 #include <vector>
 #include "math.h"
+
 //qCC
 #include <ccGLWindow.h>
 
 #include "qrimacdlg.h"
 #include "ui_qrimacdlg.h"
+#include "ccclassification.h"
 
 qRIMACdlg::qRIMACdlg(QWidget *parent) :
     QDialog(parent),
@@ -30,6 +32,12 @@ void qRIMACdlg::lancer()
 {
 
    m_app->dispToConsole("Lancer le transfert d'attributs!",ccMainAppInterface::STD_CONSOLE_MESSAGE);
+
+   //QDir::homePath() : In order to be able work on several computer and several environment
+   QString dirImgStr = QFileDialog::getExistingDirectory(this, tr("Sélectionner le dossier contenant les images"),
+                                                                  QDir::homePath(),
+                                                                  QFileDialog::ShowDirsOnly
+                                                                  | QFileDialog::DontResolveSymlinks);
 
    }
 

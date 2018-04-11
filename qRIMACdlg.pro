@@ -26,10 +26,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         qrimacdlg.cpp \
+    ccclassification.cpp
 
 
 HEADERS += \
         qrimacdlg.h \
+    ccclassification.h
 
 
 FORMS += \
