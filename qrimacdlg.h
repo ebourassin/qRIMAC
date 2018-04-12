@@ -9,6 +9,7 @@
 #include "ccPickingListener.h"
 
 
+
 namespace Ui {
 class qRIMACdlg;
 }
@@ -28,25 +29,10 @@ private:
 
 
 public slots:
+    void RVB_IN_SEARCH();
+    void PIR_IN_SEARCH();
+    void SWIR_IN_SEARCH();
     void lancer();
-/*
-    void select_cloud();
-    void sup_pts_sans_ppv();
-    void name_out();
-    void lancer();
-    void bar_progression();
-    void rvb();
-    void swir();
-    void pir();
-    void select_rvb();
-    void select_pir();
-    void select_swir();
-    void dist_voxel();
-    void dist_choice();
-    void out();
-    void dist_unite();
-    void dist_choice();
-*/
 };
 
 #endif // QRIMACDLG_H

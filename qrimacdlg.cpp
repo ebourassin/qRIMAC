@@ -11,6 +11,7 @@
 #include "ui_qrimacdlg.h"
 #include "ccclassification.h"
 #include "ccWorkSite.h"
+#include "FileIOFilter.h"
 
 //Qt
 #include "qfiledialog.h"
@@ -19,6 +20,9 @@
 #include <QXmlStreamReader>
 #include <QListWidgetItem>
 #include <QImageReader>
+#include <QMainWindow>
+#include <QFileDialog>
+
 
 qRIMACdlg::qRIMACdlg(QWidget *parent) :
     QDialog(parent),
@@ -29,7 +33,9 @@ qRIMACdlg::qRIMACdlg(QWidget *parent) :
 
 
     //Connexion of butons
-    QObject::connect(ui->lancer,SIGNAL(released()),this,SLOT(lancer()));
+    QObject::connect(ui->RVB_IN_SEARCH,SIGNAL(released()),this,SLOT(RVB_IN_SEARCH()));
+    QObject::connect(ui->PIR_IN_SEARCH,SIGNAL(released()),this,SLOT(PIR_IN_SEARCH()));
+    QObject::connect(ui->SWIR_IN_SEARCH,SIGNAL(released()),this,SLOT(SWIR_IN_SEARCH()));
 
 }
 
@@ -38,86 +44,113 @@ qRIMACdlg::~qRIMACdlg()
     delete ui;
 }
 
-void qRIMACdlg::lancer()
+void qRIMACdlg::RVB_IN_SEARCH()
 {
 
-   m_app->dispToConsole("Lancer le transfert d'attributs!",ccMainAppInterface::STD_CONSOLE_MESSAGE);
 
    //QDir::homePath() : In order to be able work on several computer and several environment
-   QString dirImgStr = QFileDialog::getExistingDirectory(this, tr("Sélectionner le dossier contenant les images"),
+   QString fileName = QFileDialog::getOpenFileName(this, tr("Sélectionner le dossier contenant les nuages de points"),
                                                                 QDir::homePath(),
-                                                                QFileDialog::ShowDirsOnly
-                                                                | QFileDialog::DontResolveSymlinks);
-
-   }
-
-   //this->currentWorkSite->initialise(dirImgStr);
-  // ui->label_img->setText(dirImgStr);
+                                                                tr("*.ply"));
 
 
+   CCVector3d loadCoordinatesShift(0,0,0);
+   bool loadCoordinatesTransEnabled = false;
 
-/*
-void qRIMACdlg::select_cloud()
-{
+   FileIOFilter::LoadParameters parameters;
+    {
+           parameters.alwaysDisplayLoadDialog = true;
+           parameters.shiftHandlingMode = ccGlobalShiftManager::DIALOG_IF_NECESSARY;
+           parameters.coordinatesShift = &loadCoordinatesShift;
+           parameters.coordinatesShiftEnabled = &loadCoordinatesTransEnabled;
+           parameters.parentWidget = this;
+       }
+
+
+
+
+    //the same for 'addToDB' (if the first one is not supported, or if the scale remains too big)
+    CCVector3d addCoordinatesShift(0, 0, 0);
+
+    CC_FILE_ERROR result = CC_FERR_NO_ERROR;
+    static ccHObject* file = FileIOFilter::LoadFromFile(fileName, parameters, result);
+
+    ui->RVB_IN->setText(fileName);
+    m_app->addToDB(file);
+
 
 }
 
-void qRIMACdlg::sup_pts_sans_ppv()
+void qRIMACdlg::PIR_IN_SEARCH()
 {
 
+   //QDir::homePath() : In order to be able work on several computer and several environment
+   QString fileNamePIR = QFileDialog::getOpenFileName(this, tr("Sélectionner le dossier contenant les nuages de points"),
+                                                                QDir::homePath(),
+                                                                tr("*.ply"));
+
+
+   CCVector3d loadCoordinatesShift(0,0,0);
+   bool loadCoordinatesTransEnabled = false;
+
+   FileIOFilter::LoadParameters parameters;
+    {
+           parameters.alwaysDisplayLoadDialog = true;
+           parameters.shiftHandlingMode = ccGlobalShiftManager::DIALOG_IF_NECESSARY;
+           parameters.coordinatesShift = &loadCoordinatesShift;
+           parameters.coordinatesShiftEnabled = &loadCoordinatesTransEnabled;
+           parameters.parentWidget = this;
+       }
+
+    CCVector3d addCoordinatesShift(0, 0, 0);
+
+    CC_FILE_ERROR result = CC_FERR_NO_ERROR;
+    static ccHObject* filePIR = FileIOFilter::LoadFromFile(fileNamePIR, parameters, result);
+
+    ui->PIR_IN->setText(fileNamePIR);
+    m_app->addToDB(filePIR);
+
 }
+
+
+void qRIMACdlg::SWIR_IN_SEARCH()
+{
+
+
+   //QDir::homePath() : In order to be able work on several computer and several environment
+   QString fileName = QFileDialog::getOpenFileName(this, tr("Sélectionner le dossier contenant les nuages de points"),
+                                                                QDir::homePath(),
+                                                                tr("*.ply"));
+
+
+   CCVector3d loadCoordinatesShift(0,0,0);
+   bool loadCoordinatesTransEnabled = false;
+
+   FileIOFilter::LoadParameters parameters;
+    {
+           parameters.alwaysDisplayLoadDialog = true;
+           parameters.shiftHandlingMode = ccGlobalShiftManager::DIALOG_IF_NECESSARY;
+           parameters.coordinatesShift = &loadCoordinatesShift;
+           parameters.coordinatesShiftEnabled = &loadCoordinatesTransEnabled;
+           parameters.parentWidget = this;
+       }
+
+
+
+
+    //the same for 'addToDB' (if the first one is not supported, or if the scale remains too big)
+    CCVector3d addCoordinatesShift(0, 0, 0);
+
+    CC_FILE_ERROR result = CC_FERR_NO_ERROR;
+    static ccHObject* file = FileIOFilter::LoadFromFile(fileName, parameters, result);
+
+    ui->SWIR_IN->setText(fileName);
+    m_app->addToDB(file);
+
+
+}
+
 void qRIMACdlg::lancer()
 {
-
+    m_app->dispToConsole("Lancer le transfert d'attributs!",ccMainAppInterface::STD_CONSOLE_MESSAGE);
 }
-void qRIMACdlg::bar_progression()
-{
-
-}
-void qRIMACdlg::rvb()
-{
-
-}
-void qRIMACdlg::swir()
-{
-
-}
-void qRIMACdlg::pir()
-{
-
-}
-
-void qRIMACdlg::select_rvb()
-{
-
-}
-
-void qRIMACdlg::select_pir()
-{
-
-}
-void qRIMACdlg::select_swir()
-{
-
-}
-void qRIMACdlg::dist_voxel()
-{
-
-}
-void qRIMACdlg::dist_choice()
-{
-
-}
-void qRIMACdlg::out()
-{
-
-}
-void qRIMACdlg::dist_unite()
-{
-
-}
-void qRIMACdlg::dist_choice()
-{
-
-}
-*/
