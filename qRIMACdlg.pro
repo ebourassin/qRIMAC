@@ -27,15 +27,17 @@ SOURCES += \
         main.cpp \
         qrimacdlg.cpp \
     ccclassification.cpp \
-    ccWorkSite.cpp
+    ccWorkSite.cpp \
+    qRIMACPlugin.cpp
 
 
 HEADERS += \
         qrimacdlg.h \
     ccclassification.h \
-    ccWorkSite.h
+    ccWorkSite.h \
+    qRIMACPlugin.h
 
 
 FORMS += \
-        qrimacdlg.ui \
+        qrimacdlg.ui
 

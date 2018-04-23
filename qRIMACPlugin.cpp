@@ -33,6 +33,7 @@
 #include "ccGLWindow.h"
 #include "ccPickingHub.h"
 
+
 //Default constructor: should mainly be used to initialize
 //actions (pointers) and other members
 qRIMACPlugin::qRIMACPlugin(QObject* parent/*=0*/)
