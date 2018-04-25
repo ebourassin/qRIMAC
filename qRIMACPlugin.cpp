@@ -23,15 +23,16 @@
 #include <QtGui>
 #include <QMainWindow>
 #include <QString>
+#include <ui_interpolationDlg.h>
+
 
 //RIMAC
 #include "qRIMACPlugin.h"
 #include "qrimacdlg.h"
-
+#include "ccInterpolationDlg.h"
 
 //qCC
 #include "ccGLWindow.h"
-#include "ccPickingHub.h"
 
 
 //Default constructor: should mainly be used to initialize
@@ -97,6 +98,8 @@ void qRIMACPlugin::doAction()
             dlg->win = win;
             dlg->m_app = m_app;
             dlg->show();
+
+
 
         }
 	//This is how you can output messages

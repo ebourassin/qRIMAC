@@ -6,8 +6,6 @@
 //qCC
 #include <ccGLWindow.h>
 #include "ccMainAppInterface.h"
-#include "ccPickingListener.h"
-
 
 
 namespace Ui {
