@@ -20,78 +20,78 @@
 //System
 #include <assert.h>
 
-ccInterpolationDlg::ccInterpolationDlg(QWidget* parent):
-     QDialog(parent)  // , Qt::Tool
-	, Ui::InterpolationDlg()
+ccInterpolationDlg::ccInterpolationDlg(QWidget* parent/*=0*/)
+    : QDialog(parent, Qt::Tool)
+    , Ui::InterpolationDlg()
 {
-	setupUi(this);
+    setupUi(this);
 
-	connect(radiusDoubleSpinBox, SIGNAL(valueChanged(double)), this, SLOT(onRadiusUpdated(double)));
+    connect(radiusDoubleSpinBox, SIGNAL(valueChanged(double)), this, SLOT(onRadiusUpdated(double)));
 }
 
 ccPointCloudInterpolator::Parameters::Method ccInterpolationDlg::getInterpolationMethod() const
 {
-	if (nnRadioButton->isChecked())
-		return ccPointCloudInterpolator::Parameters::NEAREST_NEIGHBOR;
-	else if (radiusRadioButton->isChecked())
-		return ccPointCloudInterpolator::Parameters::RADIUS;
-	else if (knnRadioButton->isChecked())
-		return ccPointCloudInterpolator::Parameters::K_NEAREST_NEIGHBORS;
+    if (nnRadioButton->isChecked())
+        return ccPointCloudInterpolator::Parameters::NEAREST_NEIGHBOR;
+    else if (radiusRadioButton->isChecked())
+        return ccPointCloudInterpolator::Parameters::RADIUS;
+    else if (knnRadioButton->isChecked())
+        return ccPointCloudInterpolator::Parameters::K_NEAREST_NEIGHBORS;
 
-	assert(false);
-	return ccPointCloudInterpolator::Parameters::NEAREST_NEIGHBOR;
+    assert(false);
+    return ccPointCloudInterpolator::Parameters::NEAREST_NEIGHBOR;
 }
 
 void ccInterpolationDlg::setInterpolationMethod(ccPointCloudInterpolator::Parameters::Method method)
 {
-	switch (method)
-	{
-	case ccPointCloudInterpolator::Parameters::NEAREST_NEIGHBOR:
-		nnRadioButton->setChecked(true);
-		break;
-	case ccPointCloudInterpolator::Parameters::RADIUS:
-		radiusRadioButton->setChecked(true);
-		break;
-	case ccPointCloudInterpolator::Parameters::K_NEAREST_NEIGHBORS:
-		knnRadioButton->setChecked(true);
-		break;
-	default:
-		assert(false);
-	}
+    switch (method)
+    {
+    case ccPointCloudInterpolator::Parameters::NEAREST_NEIGHBOR:
+        nnRadioButton->setChecked(true);
+        break;
+    case ccPointCloudInterpolator::Parameters::RADIUS:
+        radiusRadioButton->setChecked(true);
+        break;
+    case ccPointCloudInterpolator::Parameters::K_NEAREST_NEIGHBORS:
+        knnRadioButton->setChecked(true);
+        break;
+    default:
+        assert(false);
+    }
 }
 
 ccPointCloudInterpolator::Parameters::Algo ccInterpolationDlg::getInterpolationAlgorithm() const
 {
-	if (averageRadioButton->isChecked())
-		return ccPointCloudInterpolator::Parameters::AVERAGE;
-	else if (medianRadioButton->isChecked())
-		return ccPointCloudInterpolator::Parameters::MEDIAN;
-	else if (normalDistribRadioButton->isChecked())
-		return ccPointCloudInterpolator::Parameters::NORMAL_DIST;
+    if (averageRadioButton->isChecked())
+        return ccPointCloudInterpolator::Parameters::AVERAGE;
+    else if (medianRadioButton->isChecked())
+        return ccPointCloudInterpolator::Parameters::MEDIAN;
+    else if (normalDistribRadioButton->isChecked())
+        return ccPointCloudInterpolator::Parameters::NORMAL_DIST;
 
-	assert(false);
-	return ccPointCloudInterpolator::Parameters::AVERAGE;
+    assert(false);
+    return ccPointCloudInterpolator::Parameters::AVERAGE;
 }
 
 void ccInterpolationDlg::setInterpolationAlgorithm(ccPointCloudInterpolator::Parameters::Algo algo)
 {
-	switch (algo)
-	{
-	case ccPointCloudInterpolator::Parameters::AVERAGE:
-		averageRadioButton->setChecked(true);
-		break;
-	case ccPointCloudInterpolator::Parameters::MEDIAN:
-		medianRadioButton->setChecked(true);
-		break;
-	case ccPointCloudInterpolator::Parameters::NORMAL_DIST:
-		normalDistribRadioButton->setChecked(true);
-		break;
-	default:
-		assert(false);
-	}
+    switch (algo)
+    {
+    case ccPointCloudInterpolator::Parameters::AVERAGE:
+        averageRadioButton->setChecked(true);
+        break;
+    case ccPointCloudInterpolator::Parameters::MEDIAN:
+        medianRadioButton->setChecked(true);
+        break;
+    case ccPointCloudInterpolator::Parameters::NORMAL_DIST:
+        normalDistribRadioButton->setChecked(true);
+        break;
+    default:
+        assert(false);
+    }
 }
 
 void ccInterpolationDlg::onRadiusUpdated(double radius)
 {
-	kernelDoubleSpinBox->setValue(radius / 2.5);
+    kernelDoubleSpinBox->setValue(radius / 2.5);
 }

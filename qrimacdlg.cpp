@@ -4,22 +4,25 @@
 #include <typeinfo>
 #include <vector>
 #include "math.h"
-#include <QMainWindow>
+
+
+#include <mainwindow.h>
+
 
 //qCC
 #include <ccGLWindow.h>
 #include "qrimacdlg.h"
 #include "ui_qrimacdlg.h"
 #include "ccclassification.h"
-#include "ccWorkSite.h"
 #include "FileIOFilter.h"
 #include "ccConsole.h"
 #include "ccEntityAction.h"
 
-#include <ui_interpolationDlg.h>
+//#include <InterpolationDlg.ui>
 #include "ccInterpolationDlg.h"
 #include "ccItemSelectionDlg.h"
 #include "ccProgressDialog.h"
+#include "interpolation.h"
 
 //Qt
 #include "qfiledialog.h"
@@ -28,12 +31,11 @@
 #include <QXmlStreamReader>
 #include <QListWidgetItem>
 #include <QImageReader>
-#include <QMainWindow>
 #include <QFileDialog>
+#include <QMainWindow>
 
 //qCC_db
 #include "ccPointCloud.h"
-//#include "ccPointCloudInterpolator.h"
 #include "ccOctreeProxy.h"
 
 //CClib
@@ -46,11 +48,16 @@ qRIMACdlg::qRIMACdlg(QWidget *parent) :
 {
     ui->setupUi(this);
 
+
+
     //Connexion of butons
     QObject::connect(ui->RVB_IN_SEARCH,SIGNAL(released()),this,SLOT(RVB_IN_SEARCH()));
     QObject::connect(ui->PIR_IN_SEARCH,SIGNAL(released()),this,SLOT(PIR_IN_SEARCH()));
     QObject::connect(ui->SWIR_IN_SEARCH,SIGNAL(released()),this,SLOT(SWIR_IN_SEARCH()));
     QObject::connect(ui->lancer,SIGNAL(released()),this,SLOT(lancer()));
+    QObject::connect(ui->choix_nuage,SIGNAL(released()),this,SLOT(choix_nuage()));
+
+   // connect(m_UI->actionInterpolateSFs,				&QAction::triggered, this, &MainWindow::doActionInterpolateScalarFields);
 
 }
 
@@ -164,14 +171,56 @@ void qRIMACdlg::lancer()
 
     //on affiche "On lance le transfert d'attributs!" lorsque l'utilisateur clique sur le bouton lancer
     m_app->dispToConsole("On lance le transfert d'attributs!",ccMainAppInterface::STD_CONSOLE_MESSAGE);
-    //const ccHObject::Container selectedEntities = getSelectedEntities();
 
-   // if (!ccEntityAction::interpolateSFs(selectedEntities, m_app))
-   //     return;
+   // ccHObject entity :: getSelectedEntities();
+   // MainWindow::doActionInterpolateScalarFields();
+    //const ccHObject::Container selectedEntities;
+//    if (!ccEntityAction::interpolateSFs( m_selectedEntities,  m_app))
+//    return;
+//    refreshAll();
+//    updateUI();
+    //m_app->setSelectedInDB();
+//    interpolation* intdlg = new interpolation();
+
+//   // intdlg->setInterpolationMethod(method);
+//   // ccPointCloudInterpolator::Parameters::Method getInterpolationMethod() const;
+//   // intdlg->setInterpolationMethod(NEAREST_NEIGHBOR);
+
+//   // ccPointCloudInterpolator::Parameters::Algo getInterpolationAlgorithm() const;
+//   // intdlg->setInterpolationAlgorithm(algo);
+//    intdlg->show();
+
+}
+
+void qRIMACdlg::choix_nuage()
+{
+   //QDir::homePath() : In order to be able work on several computer and several environment
+   QString fileName = QFileDialog::getOpenFileName(this, tr("Sélectionner le fichier contenant les nuages de points à classifier"),
+                                                                QDir::homePath(),
+                                                                tr("*.ply"));
+
+   CCVector3d loadCoordinatesShift(0,0,0);
+   bool loadCoordinatesTransEnabled = false;
+
+   FileIOFilter::LoadParameters parameters;
+    {
+           parameters.alwaysDisplayLoadDialog = true;
+           parameters.shiftHandlingMode = ccGlobalShiftManager::DIALOG_IF_NECESSARY;
+           parameters.coordinatesShift = &loadCoordinatesShift;
+           parameters.coordinatesShiftEnabled = &loadCoordinatesTransEnabled;
+           parameters.parentWidget = this;
+       }
 
 
-    ccInterpolationDlg* intdlg = new ccInterpolationDlg();
-    intdlg->show();
+    //the same for 'addToDB' (if the first one is not supported, or if the scale remains too big)
+    CCVector3d addCoordinatesShift(0, 0, 0);
+
+    CC_FILE_ERROR result = CC_FERR_NO_ERROR;
+    static ccHObject* file = FileIOFilter::LoadFromFile(fileName, parameters, result);
+
+    ui->choix->setText(fileName);
+    m_app->addToDB(file);
+
 }
 
 

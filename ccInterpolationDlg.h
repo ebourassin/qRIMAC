@@ -21,26 +21,27 @@
 #include <ui_interpolationDlg.h>
 
 //qCC_db
-#include "ccPointCloudInterpolator.h"
+#include <ccPointCloudInterpolator.h>
 
 //! Dialog for generic interpolation algorithms
 class ccInterpolationDlg : public QDialog, public Ui::InterpolationDlg
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
 
-	//! Default constructor
-	explicit ccInterpolationDlg(QWidget* parent = 0);
+    //! Default constructor
+    explicit ccInterpolationDlg(QWidget* parent = 0);
 
-	ccPointCloudInterpolator::Parameters::Method getInterpolationMethod() const;
-	void setInterpolationMethod(ccPointCloudInterpolator::Parameters::Method method);
+    ccPointCloudInterpolator::Parameters::Method getInterpolationMethod() const;
+    void setInterpolationMethod(ccPointCloudInterpolator::Parameters::Method method);
 
-	ccPointCloudInterpolator::Parameters::Algo getInterpolationAlgorithm() const;
+    ccPointCloudInterpolator::Parameters::Algo getInterpolationAlgorithm() const;
     void setInterpolationAlgorithm(ccPointCloudInterpolator::Parameters::Algo algo);
 
-public slots:
-	void onRadiusUpdated(double);
+protected slots:
+
+    void onRadiusUpdated(double);
 };
 
 #endif //CC_INTERPOLATION_DLG_HEADER

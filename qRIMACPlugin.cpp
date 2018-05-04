@@ -23,13 +23,14 @@
 #include <QtGui>
 #include <QMainWindow>
 #include <QString>
-#include <ui_interpolationDlg.h>
+//#include "InterpolationDlg.ui"
 
 
 //RIMAC
 #include "qRIMACPlugin.h"
 #include "qrimacdlg.h"
 #include "ccInterpolationDlg.h"
+#include "ccclassification.h"
 
 //qCC
 #include "ccGLWindow.h"
@@ -94,12 +95,13 @@ void qRIMACPlugin::doAction()
 
         if (win){
             //show dialog to let the user choose the operation to perform
+            //ccInterpolationDlg* intdlg = new ccInterpolationDlg();
+            //intdlg->show();
+
             qRIMACdlg* dlg = new qRIMACdlg();
             dlg->win = win;
             dlg->m_app = m_app;
             dlg->show();
-
-
 
         }
 	//This is how you can output messages

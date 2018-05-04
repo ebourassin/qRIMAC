@@ -27,7 +27,6 @@ SOURCES += \
         main.cpp \
         qrimacdlg.cpp \
         ccclassification.cpp \
-        ccWorkSite.cpp \
         qRIMACPlugin.cpp \
     ccInterpolationDlg.cpp
 
@@ -35,7 +34,6 @@ SOURCES += \
 HEADERS += \
         qrimacdlg.h \
     ccclassification.h \
-    ccWorkSite.h \
     qRIMACPlugin.h \
     ccInterpolationDlg.h
 
