@@ -12,25 +12,25 @@ if (INSTALL_QRIMAC_PLUGIN)
     
     include( ${CMAKE_CURRENT_SOURCE_DIR}/../../plugins/CMakePluginTpl.cmake)
 
-
+    #we need ccOverlay classes
+    file( GLOB CC_PLUGIN_CUSTOM_HEADER_LIST ${CloudCompare_QCC_DIR}/ccOverlayDialog*.h )
+    file( GLOB CC_PLUGIN_CUSTOM_SOURCE_LIST ${CloudCompare_QCC_DIR}/ccOverlayDialog*.cpp )
 
     file( GLOB CC_PLUGIN_CUSTOM_HEADER_LIST ${CloudCompare_QCC_DIR}/ccItemSelectionDlg*.h)
     file( GLOB CC_PLUGIN_CUSTOM_SOURCE_LIST ${CloudCompare_QCC_DIR}/ccItemSelectionDlg*.cpp)
-    set( CC_PLUGIN_CUSTOM_UI_LIST ${CloudCompare_SOURCE_DIR}/ui_templates/itemSelectionDlg.ui )
+    set( CC_PLUGIN_CUSTOM_UI_LIST ${CloudCompare_QCC_DIR}/ui_templates/itemSelectionDlg.ui )
 
 
     file( GLOB CC_PLUGIN_CUSTOM_HEADER_LIST ${CloudCompare_QCC_DIR}/ccInterpolationDlg*.h )
     file( GLOB CC_PLUGIN_CUSTOM_SOURCE_LIST ${CloudCompare_QCC_DIR}/ccInterpolationDlg*.cpp )
-    set( CC_PLUGIN_CUSTOM_UI_LIST ${CloudCompare_SOURCE_DIR}/ui_templates/interpolationDlg.ui )
+    set( CC_PLUGIN_CUSTOM_UI_LIST ${CloudCompare_QCC_DIR}/ui_templates/interpolationDlg.ui )
 
-    #include_directories( src )
-   # add_subdirectory( src )
-   # add_subdirectory( ui )
-    #include( ../../CMakePluginTpl.cmake )
-    
+
+   
+          
     #add IO support
-    #include_directories( ${QCC_IO_LIB_SOURCE_DIR} )
-    #target_link_libraries( ${PROJECT_NAME} QCC_IO_LIB )
+    include_directories( ${QCC_IO_LIB_SOURCE_DIR} )
+    target_link_libraries( ${PROJECT_NAME} QCC_IO_LIB )
   
     #add shapelib support
     #target_link_libraries( ${PROJECT_NAME} SHAPELIB )

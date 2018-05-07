@@ -23,7 +23,6 @@
 #include <QtGui>
 #include <QMainWindow>
 #include <QString>
-//#include "InterpolationDlg.ui"
 
 
 //RIMAC

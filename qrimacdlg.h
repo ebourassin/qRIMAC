@@ -6,7 +6,8 @@
 //qCC
 //#include <ccGLWindow.h>
 #include "ccMainAppInterface.h"
-
+class ccHObject;
+class ccGLWindow;
 
 namespace Ui {
 class qRIMACdlg;
@@ -21,17 +22,15 @@ public:
     ~qRIMACdlg();
     ccGLWindow* win;
     ccMainAppInterface* m_app;
-   // inline virtual const ccHObject::Container& getSelectedEntities() const override
-    //{
-    //    return m_selectedEntities ;
-   // }
-    void doActionInterpolateScalarFields();
-   // virtual void refreshAll(bool only2D = false) override;
-    //virtual void updateUI() override;
+
+    bool interpolate(const ccHObject::Container &selectedEntities);
+
+   // void doActionInterpolateScalarFields();
 
 
 private:
     Ui::qRIMACdlg *ui;
+
     //! Currently selected entities;
     ccHObject::Container m_selectedEntities;
 
