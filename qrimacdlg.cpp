@@ -287,15 +287,12 @@ void qRIMACdlg::lancer()
     //on affiche "On lance le transfert d'attributs!" lorsque l'utilisateur clique sur le bouton lancer
     m_app->dispToConsole("On lance le transfert d'attributs!",ccMainAppInterface::STD_CONSOLE_MESSAGE);
 
-    ccInterpolationDlg* intdlg = new ccInterpolationDlg();
+    const ccHObject::Container& selectedEntities= m_app->getSelectedEntities();
 
-    intdlg->show();
-
-//   // if ( !ccEntityAction::interpolateSFs(m_selectedEntities, m_app) )
-//   //         return;
-//    if (!qRIMACdlg::interpolate(m_selectedEntities))
-//            return;
+    if (!qRIMACdlg::interpolate(selectedEntities))
+           return;
    }
+
 
 
  void qRIMACdlg::lancer_classif()
