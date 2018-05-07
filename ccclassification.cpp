@@ -17,7 +17,6 @@
 
 #include "ccclassification.h"
 
-<<<<<<< HEAD
 #include <iostream>
 #include <string>
 
@@ -36,24 +35,6 @@
 #include "ccPointCloud.h"
 
 using namespace CCLib;
-=======
-#include <mainwindow.h>
-
-
-//qCC
-#include <ccGLWindow.h>
-#include "qrimacdlg.h"
-#include "ui_qrimacdlg.h"
-
-#include "ccProgressDialog.h"
-
-//Qt
-#include "qfiledialog.h"
-#include <QString>
-#include <QFile>
-#include <QFileDialog>
-#include <QMainWindow>
->>>>>>> 5d6db42a7119681658c2d2099ce37585fc0487f4
 
 ccClassification::ccClassification()
 {
@@ -118,5 +99,3 @@ void ccClassification::KMeans(ChunkedPointCloud* theCloud)
     }
 
 }
-
-

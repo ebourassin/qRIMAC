@@ -40,6 +40,7 @@ public slots:
     void PIR_IN_SEARCH();
     void SWIR_IN_SEARCH();
     void lancer();
+    void lancer_classif();
     void choix_nuage();
 };
 
