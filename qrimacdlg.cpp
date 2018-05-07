@@ -57,6 +57,7 @@ qRIMACdlg::qRIMACdlg(QWidget *parent) :
     QObject::connect(ui->SWIR_IN_SEARCH,SIGNAL(released()),this,SLOT(SWIR_IN_SEARCH()));
     QObject::connect(ui->lancer,SIGNAL(released()),this,SLOT(lancer()));
     QObject::connect(ui->choix_nuage,SIGNAL(released()),this,SLOT(choix_nuage()));
+    QObject::connect(ui->lancer_classif,SIGNAL(released()),this,SLOT(lancer_classif()));
 
 }
 
@@ -295,6 +296,16 @@ void qRIMACdlg::lancer()
 //    if (!qRIMACdlg::interpolate(m_selectedEntities))
 //            return;
    }
+
+
+ void qRIMACdlg::lancer_classif()
+ {
+
+     const ccHObject::Container& selectedEntities = m_app->getSelectedEntities();
+     ccClassification classif;
+     ccPointCloud* pc = static_cast<ccPointCloud*>(selectedEntities[0]);
+     classif.KMeans(pc);
+ }
 
 void qRIMACdlg::choix_nuage()
 {
