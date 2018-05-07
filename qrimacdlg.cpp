@@ -52,12 +52,19 @@ qRIMACdlg::qRIMACdlg(QWidget *parent) :
     ui->setupUi(this);
 
     //Connexion of butons
+
+    //TRANSFERT D'ATTRIBUTS
     QObject::connect(ui->RVB_IN_SEARCH,SIGNAL(released()),this,SLOT(RVB_IN_SEARCH()));
     QObject::connect(ui->PIR_IN_SEARCH,SIGNAL(released()),this,SLOT(PIR_IN_SEARCH()));
     QObject::connect(ui->SWIR_IN_SEARCH,SIGNAL(released()),this,SLOT(SWIR_IN_SEARCH()));
     QObject::connect(ui->lancer,SIGNAL(released()),this,SLOT(lancer()));
+
+    //CLASSIFICATION
     QObject::connect(ui->choix_nuage,SIGNAL(released()),this,SLOT(choix_nuage()));
     QObject::connect(ui->lancer_classif,SIGNAL(released()),this,SLOT(lancer_classif()));
+
+    //VERITE TERRAIN
+    QObject::connect(ui->VT_nuage,SIGNAL(released()),this,SLOT(VT_nuage()));
 
 }
 
@@ -66,6 +73,7 @@ qRIMACdlg::~qRIMACdlg()
     delete ui;
 }
 
+//TRANSFERT D'ATTRIBUTS
 
 //permet de choisir notre nuage de points RVB
 void qRIMACdlg::RVB_IN_SEARCH()
@@ -294,15 +302,8 @@ void qRIMACdlg::lancer()
    }
 
 
+ //CLASSIFICATION
 
- void qRIMACdlg::lancer_classif()
- {
-
-     const ccHObject::Container& selectedEntities = m_app->getSelectedEntities();
-     ccClassification classif;
-     ccPointCloud* pc = static_cast<ccPointCloud*>(selectedEntities[0]);
-     classif.KMeans(pc);
- }
 
 void qRIMACdlg::choix_nuage()
 {
@@ -335,100 +336,45 @@ void qRIMACdlg::choix_nuage()
 
 }
 
+void qRIMACdlg::lancer_classif()
+{
+
+    const ccHObject::Container& selectedEntities = m_app->getSelectedEntities();
+    ccClassification classif;
+    ccPointCloud* pc = static_cast<ccPointCloud*>(selectedEntities[0]);
+    classif.KMeans(pc);
+}
 
 
-//    std::vector<int> inSFIndexes;
-//    inSFIndexes.push_back(0);
+//VERITE TERRAIN
 
-//    CCLib::GenericProgressCallback* progressCb=0;
-//    unsigned char octreeLevel=0;
+void qRIMACdlg::VT_nuage()
+{
+   //QDir::homePath() : In order to be able work on several computer and several environment
+   QString fileName = QFileDialog::getOpenFileName(this, tr("Sélectionner le fichier contenant les nuages de points à classifier"),
+                                                                QDir::homePath(),
+                                                                tr("*.ply"));
 
-//    //initialisation de inSFIndexes
-//    std::vector<int> sfIndexes;
+   CCVector3d loadCoordinatesShift(0,0,0);
+   bool loadCoordinatesTransEnabled = false;
 
-//    try
-//            {
-//                unsigned sfCount = cloud1->getNumberOfScalarFields();
-//                if (sfCount == 1)
-//                {
-//                    sfIndexes.push_back(0);
-//                }
-//                else if (sfCount > 1)
-//                {
-//                    ccItemSelectionDlg isDlg(true, m_app->getMainWindow(), "entity");
-//                    QStringList scalarFields;
-//                    {
-//                        for (unsigned i = 0; i < sfCount; ++i)
-//                        {
-//                            scalarFields << cloud1->getScalarFieldName(i);
-//                        }
-//                    }
-//                    isDlg.setItems(scalarFields, 0);
-//                    if (!isDlg.exec())
-//                    {
-//                        m_app->dispToConsole("An error occurred! (see console)",ccMainAppInterface::STD_CONSOLE_MESSAGE);
-//                    }
-//                    isDlg.getSelectedIndexes(sfIndexes);
-//                    if (sfIndexes.empty())
-//                    {
-//                        m_app->dispToConsole("An error occurred! (see console)",ccMainAppInterface::STD_CONSOLE_MESSAGE);
-//                    }
-//                }
-
-//                }
-//    catch (const std::bad_alloc&)
-//            {
-//                ccConsole::Error("Not enough memory");
-//            }
+   FileIOFilter::LoadParameters parameters;
+    {
+           parameters.alwaysDisplayLoadDialog = true;
+           parameters.shiftHandlingMode = ccGlobalShiftManager::DIALOG_IF_NECESSARY;
+           parameters.coordinatesShift = &loadCoordinatesShift;
+           parameters.coordinatesShiftEnabled = &loadCoordinatesTransEnabled;
+           parameters.parentWidget = this;
+       }
 
 
-//    //semi-persistent parameters
-//    static ccPointCloudInterpolator::Parameters::Method s_interpMethod = ccPointCloudInterpolator::Parameters::RADIUS;
-//    static ccPointCloudInterpolator::Parameters::Algo s_interpAlgo = ccPointCloudInterpolator::Parameters::NORMAL_DIST;
-//    static int s_interpKNN = 6;
+    //the same for 'addToDB' (if the first one is not supported, or if the scale remains too big)
+    CCVector3d addCoordinatesShift(0, 0, 0);
 
-//    ccInterpolationDlg iDlg(m_app->getMainWindow());
-//            iDlg.setInterpolationMethod(s_interpMethod);
-//            iDlg.setInterpolationAlgorithm(s_interpAlgo);
-//            iDlg.knnSpinBox->setValue(s_interpKNN);
-//            iDlg.radiusDoubleSpinBox->setValue(cloud2->getOwnBB().getDiagNormd() / 100);
+    CC_FILE_ERROR result = CC_FERR_NO_ERROR;
+    static ccHObject* file = FileIOFilter::LoadFromFile(fileName, parameters, result);
 
-//            if (!iDlg.exec())
-//            {
-//               //process cancelled by the user
-//                m_app->dispToConsole("An error occurredjnjbj! (see console)",ccMainAppInterface::STD_CONSOLE_MESSAGE);
-//            }
+    ui->VT->setText(fileName);
+    m_app->addToDB(file);
 
-//            //setup parameters
-//            ccPointCloudInterpolator::Parameters params;
-//            params.method = s_interpMethod = iDlg.getInterpolationMethod();
-//            params.algo = s_interpAlgo = iDlg.getInterpolationAlgorithm();
-//            params.knn = s_interpKNN = iDlg.knnSpinBox->value();
-//            params.radius = iDlg.radiusDoubleSpinBox->value();
-//            params.sigma = iDlg.kernelDoubleSpinBox->value();
-
-//            ccProgressDialog pDlg(true, m_app->getMainWindow());
-//            unsigned sfCountBefore = cloud2->getNumberOfScalarFields();
-
-//    // Retourne un booléan: ccPointCloudInterpolator::InterpolateScalarFieldsFrom
-//    if( ccPointCloudInterpolator::InterpolateScalarFieldsFrom(cloud1,
-//                                                              cloud2,
-//                                                              sfIndexes,
-//                                                              params,
-//                                                              progressCb,
-//                                                              octreeLevel
-//                                                              ))
-
-//    {
-
-//        cloud1->setCurrentDisplayedScalarField(static_cast<int>(std::min(sfCountBefore + 1, cloud1->getNumberOfScalarFields())) - 1);
-//       // cloud1->showSF(true);
-//        m_app->addToDB(cloud1);
-//    }
-//    else
-//            {
-//                m_app->dispToConsole("An error occurred! (see console)",ccMainAppInterface::STD_CONSOLE_MESSAGE);
-//            }
-//    cloud1->prepareDisplayForRefresh_recursive();
-
-//}
+}

@@ -42,6 +42,7 @@ public slots:
     void lancer();
     void lancer_classif();
     void choix_nuage();
+    void VT_nuage();
 };
 
 #endif // QRIMACDLG_H
