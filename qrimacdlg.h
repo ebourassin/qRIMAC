@@ -4,10 +4,10 @@
 #include <QDialog>
 
 //qCC
-#include <ccGLWindow.h>
+//#include <ccGLWindow.h>
 #include "ccMainAppInterface.h"
-#include "ccPickingListener.h"
-
+class ccHObject;
+class ccGLWindow;
 
 namespace Ui {
 class qRIMACdlg;
@@ -23,12 +23,25 @@ public:
     ccGLWindow* win;
     ccMainAppInterface* m_app;
 
+    bool interpolate(const ccHObject::Container &selectedEntities);
+
+   // void doActionInterpolateScalarFields();
+
+
 private:
     Ui::qRIMACdlg *ui;
 
+    //! Currently selected entities;
+    ccHObject::Container m_selectedEntities;
+
 
 public slots:
-    void start();
+    void RVB_IN_SEARCH();
+    void PIR_IN_SEARCH();
+    void SWIR_IN_SEARCH();
+    void lancer();
+    void lancer_classif();
+    void choix_nuage();
 };
 
 #endif // QRIMACDLG_H

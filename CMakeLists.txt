@@ -1,33 +1,39 @@
 cmake_minimum_required(VERSION 3.0)
 
-#REPLACE ALL 'DUMMY' OCCURENCES BY YOUR PLUGIN NAME
-#AND ADAPT THE CODE BELOW TO YOUR OWN NEEDS!
-
 option( INSTALL_QRIMAC_PLUGIN "Check to install qRIMAC plugin" OFF )
 
 # CloudCompare 'RIMAC' plugin
 if (INSTALL_QRIMAC_PLUGIN)
     project( QRIMAC_PLUGIN )
 
-    #As we are going to re-use several components of the main qCC project
-    #we define its sources path relatively to the plugin's dir
     set(CloudCompare_QCC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../qCC)
 
     include_directories( ${CloudCompare_QCC_DIR})
     
-    #load necessary libraries (see qPCV for an example)
-    #add_subdirectory (LIB1)
-    
-    #if the plugin is an 'OpenGL filter', uncomment the line below
-    #set( CC_OPENGL_FILTER ON BOOL)
-    include( ../CMakePluginTpl.cmake )
+    include( ${CMAKE_CURRENT_SOURCE_DIR}/../../plugins/CMakePluginTpl.cmake)
 
-    #we also need picking hub classes
-    list( APPEND  CC_PLUGIN_CUSTOM_HEADER_LIST ${CloudCompare_QCC_DIR}/ccPickingListener.h )
-	list( APPEND  CC_PLUGIN_CUSTOM_HEADER_LIST ${CloudCompare_QCC_DIR}/ccPickingHub.h )	
-	list( APPEND  CC_PLUGIN_CUSTOM_SOURCE_LIST ${CloudCompare_QCC_DIR}/ccPickingHub.cpp )
-    
-    #set dependencies to necessary libraries (see qPCV for an example)
-    #target_link_libraries( ${PROJECT_NAME} LIB1 )
-    #include_directories( ${LIB1_INCLUDE_DIR} )
+    #we need ccOverlay classes
+    file( GLOB CC_PLUGIN_CUSTOM_HEADER_LIST ${CloudCompare_QCC_DIR}/ccOverlayDialog*.h )
+    file( GLOB CC_PLUGIN_CUSTOM_SOURCE_LIST ${CloudCompare_QCC_DIR}/ccOverlayDialog*.cpp )
+
+    file( GLOB CC_PLUGIN_CUSTOM_HEADER_LIST ${CloudCompare_QCC_DIR}/ccItemSelectionDlg*.h)
+    file( GLOB CC_PLUGIN_CUSTOM_SOURCE_LIST ${CloudCompare_QCC_DIR}/ccItemSelectionDlg*.cpp)
+    set( CC_PLUGIN_CUSTOM_UI_LIST ${CloudCompare_QCC_DIR}/ui_templates/itemSelectionDlg.ui )
+
+
+    file( GLOB CC_PLUGIN_CUSTOM_HEADER_LIST ${CloudCompare_QCC_DIR}/ccInterpolationDlg*.h )
+    file( GLOB CC_PLUGIN_CUSTOM_SOURCE_LIST ${CloudCompare_QCC_DIR}/ccInterpolationDlg*.cpp )
+    set( CC_PLUGIN_CUSTOM_UI_LIST ${CloudCompare_QCC_DIR}/ui_templates/interpolationDlg.ui )
+
+
+   
+          
+    #add IO support
+    include_directories( ${QCC_IO_LIB_SOURCE_DIR} )
+    target_link_libraries( ${PROJECT_NAME} QCC_IO_LIB )
+  
+    #add shapelib support
+    #target_link_libraries( ${PROJECT_NAME} SHAPELIB )
+   # include_directories( ${SHAPELIB_SOURCE_DIR} )
+   # set_property( TARGET ${PROJECT_NAME} APPEND PROPERTY COMPILE_DEFINITIONS CC_SHP_SUPPORT )
 endif()

@@ -24,13 +24,16 @@
 #include <QMainWindow>
 #include <QString>
 
+
 //RIMAC
 #include "qRIMACPlugin.h"
 #include "qrimacdlg.h"
+#include "ccInterpolationDlg.h"
+#include "ccclassification.h"
 
 //qCC
 #include "ccGLWindow.h"
-#include "ccPickingHub.h"
+
 
 //Default constructor: should mainly be used to initialize
 //actions (pointers) and other members
@@ -91,10 +94,14 @@ void qRIMACPlugin::doAction()
 
         if (win){
             //show dialog to let the user choose the operation to perform
+            //ccInterpolationDlg* intdlg = new ccInterpolationDlg();
+            //intdlg->show();
+
             qRIMACdlg* dlg = new qRIMACdlg();
             dlg->win = win;
             dlg->m_app = m_app;
             dlg->show();
+
         }
 	//This is how you can output messages
         //m_app->dispToConsole("[qRIMACPlugin] Hello world!",ccMainAppInterface::STD_CONSOLE_MESSAGE); //a standard message is displayed in the console

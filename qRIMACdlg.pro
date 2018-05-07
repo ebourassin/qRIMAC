@@ -25,10 +25,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        qrimacdlg.cpp
+        qrimacdlg.cpp \
+        ccclassification.cpp \
+        qRIMACPlugin.cpp \
+    ccInterpolationDlg.cpp
+
 
 HEADERS += \
-        qrimacdlg.h
+        qrimacdlg.h \
+    ccclassification.h \
+    qRIMACPlugin.h \
+    ccInterpolationDlg.h
+
 
 FORMS += \
-        qrimacdlg.ui
+        qrimacdlg.ui \
+    interpolationDlg.ui
+
