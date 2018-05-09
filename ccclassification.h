@@ -11,7 +11,7 @@ class ccClassification
 {
 public:
     ccClassification();
-    void KMeans(CCLib::ChunkedPointCloud *theCloud);
+    void KMeans(CCLib::ChunkedPointCloud* theCloud);
 };
 
 
