@@ -24,6 +24,8 @@
 #include "ccInterpolationDlg.h"
 #include "ccItemSelectionDlg.h"
 #include "ccProgressDialog.h"
+#include "ccPointListPickingDlg.h"
+#include "ccPickingHub.h"
 
 
 //Qt
@@ -43,6 +45,9 @@
 
 //CClib
 #include <ScalarFieldTools.h>
+
+
+using namespace CCLib;
 
 qRIMACdlg::qRIMACdlg(QWidget *parent) :
     QDialog(parent),
@@ -65,6 +70,7 @@ qRIMACdlg::qRIMACdlg(QWidget *parent) :
 
     //VERITE TERRAIN
     QObject::connect(ui->VT_nuage,SIGNAL(released()),this,SLOT(VT_nuage()));
+    QObject::connect(ui->select_point,SIGNAL(released()),this,SLOT(select_point()));
 
 }
 
@@ -174,135 +180,21 @@ void qRIMACdlg::SWIR_IN_SEARCH()
 }
 
 
-bool qRIMACdlg::interpolate(const ccHObject::Container &selectedEntities)
-{
-    if (selectedEntities.size() != 2)
-    {
-        ccConsole::Error("Select 2 entities (clouds or meshes)!");
-        return false;
-    }
-
-    ccHObject* ent1 = selectedEntities[0];
-    ccHObject* ent2 = selectedEntities[1];
-
-    ccPointCloud* cloud1 = ccHObjectCaster::ToPointCloud(ent1);
-    ccPointCloud* cloud2 = ccHObjectCaster::ToPointCloud(ent2);
-
-    if (!cloud1 || !cloud2)
-    {
-        ccConsole::Error("Select 2 entities (clouds or meshes)!");
-        return false;
-    }
-
-    if (!cloud1->hasScalarFields() && !cloud2->hasScalarFields())
-    {
-        ccConsole::Error("None of the selected entities has per-point or per-vertex colors!");
-        return false;
-    }
-
-    ccPointCloud* source = cloud1;
-    ccPointCloud* dest = cloud2;
-
-    //show the list of scalar fields available on the source point cloud
-    std::vector<int> sfIndexes;
-    try
-    {
-        unsigned sfCount = source->getNumberOfScalarFields();
-        if (sfCount == 1)
-        {
-            sfIndexes.push_back(0);
-        }
-        else if (sfCount > 1)
-        {
-            ccItemSelectionDlg isDlg(true, m_app->getMainWindow(), "entity");
-            QStringList scalarFields;
-            {
-                for (unsigned i = 0; i < sfCount; ++i)
-                {
-                    scalarFields << source->getScalarFieldName(i);
-                }
-            }
-            isDlg.setItems(scalarFields, 0);
-            if (!isDlg.exec())
-            {
-                //cancelled by the user
-                return false;
-            }
-            isDlg.getSelectedIndexes(sfIndexes);
-            if (sfIndexes.empty())
-            {
-                ccConsole::Error("No scalar field was selected");
-                return false;
-            }
-        }
-        else
-        {
-            assert(false);
-        }
-    }
-    catch (const std::bad_alloc&)
-    {
-        ccConsole::Error("Not enough memory");
-        return false;
-    }
-
-    //semi-persistent parameters
-    static ccPointCloudInterpolator::Parameters::Method s_interpMethod = ccPointCloudInterpolator::Parameters::RADIUS;
-    static ccPointCloudInterpolator::Parameters::Algo s_interpAlgo = ccPointCloudInterpolator::Parameters::NORMAL_DIST;
-    static int s_interpKNN = 6;
-
-    ccInterpolationDlg iDlg(m_app->getMainWindow());
-    iDlg.setInterpolationMethod(s_interpMethod);
-    iDlg.setInterpolationAlgorithm(s_interpAlgo);
-    iDlg.knnSpinBox->setValue(s_interpKNN);
-    iDlg.radiusDoubleSpinBox->setValue(dest->getOwnBB().getDiagNormd() / 100);
-
-    if (!iDlg.exec())
-    {
-        //process cancelled by the user
-        return false;
-    }
-
-    //setup parameters
-    ccPointCloudInterpolator::Parameters params;
-    params.method = s_interpMethod = iDlg.getInterpolationMethod();
-    params.algo = s_interpAlgo = iDlg.getInterpolationAlgorithm();
-    params.knn = s_interpKNN = iDlg.knnSpinBox->value();
-    params.radius = iDlg.radiusDoubleSpinBox->value();
-    params.sigma = iDlg.kernelDoubleSpinBox->value();
-
-    ccProgressDialog pDlg(true,  m_app->getMainWindow());
-    unsigned sfCountBefore = dest->getNumberOfScalarFields();
-
-    if (ccPointCloudInterpolator::InterpolateScalarFieldsFrom(dest, source, sfIndexes, params, &pDlg))
-    {
-        dest->setCurrentDisplayedScalarField(static_cast<int>(std::min(sfCountBefore + 1, dest->getNumberOfScalarFields())) - 1);
-        dest->showSF(true);
-    }
-    else
-    {
-        ccConsole::Error("An error occurred! (see console)");
-    }
-
-    dest->prepareDisplayForRefresh_recursive();
-
-    return true;
-
-}
-
 void qRIMACdlg::lancer()
 {
     //on affiche "On lance le transfert d'attributs!" lorsque l'utilisateur clique sur le bouton lancer
     m_app->dispToConsole("On lance le transfert d'attributs!",ccMainAppInterface::STD_CONSOLE_MESSAGE);
 
-    const ccHObject::Container& selectedEntities= m_app->getSelectedEntities();
+    this->m_selectedEntities= m_app->getSelectedEntities();
 
-    if (!qRIMACdlg::interpolate(selectedEntities))
+    ccInterpolation interpol;
+
+    if (!interpol.interpolate(m_selectedEntities, m_app))
            return;
    }
 
 
- //CLASSIFICATION
+//CLASSIFICATION
 
 
 void qRIMACdlg::choix_nuage()
@@ -339,9 +231,9 @@ void qRIMACdlg::choix_nuage()
 void qRIMACdlg::lancer_classif()
 {
 
-    const ccHObject::Container& selectedEntities = m_app->getSelectedEntities();
+    this-> m_selectedEntities = m_app->getSelectedEntities();
     ccClassification classif;
-    ccPointCloud* pc = static_cast<ccPointCloud*>(selectedEntities[0]);
+    ccPointCloud* pc = static_cast<ccPointCloud*>(m_selectedEntities[0]);
     classif.KMeans(pc);
 }
 
@@ -378,3 +270,83 @@ void qRIMACdlg::VT_nuage()
     m_app->addToDB(file);
 
 }
+
+void qRIMACdlg::select_point()
+{
+    this-> m_selectedEntities= m_app->getSelectedEntities();
+
+    this-> m_pickingHub = this->m_app->pickingHub();
+
+
+    ccPointCloud* pc = ccHObjectCaster::ToPointCloud(m_selectedEntities[0]);
+        if (!pc)
+        {
+            ccConsole::Error("Wrong type of entity");
+            return;
+        }
+        if (!pc->isVisible() || !pc->isEnabled())
+            {
+                ccConsole::Error("Points must be visible!");
+                return;
+            }
+        if (!m_plpDlg)
+           {
+               // m_plpDlg = new ccPointListPickingDlg(m_pickingHub, this);
+
+           }
+
+
+}
+
+
+
+//void MainWindow::activatePointListPickingMode()
+//{
+//    ccGLWindow* win = getActiveGLWindow();
+//    if (!win)
+//        return;
+
+//    //there should be only one point cloud in current selection!
+//    if (!haveOneSelection())
+//    {
+//        ccConsole::Error("Select one and only one entity!");
+//        return;
+//    }
+
+//    ccPointCloud* pc = ccHObjectCaster::ToPointCloud(m_selectedEntities[0]);
+//    if (!pc)
+//    {
+//        ccConsole::Error("Wrong type of entity");
+//        return;
+//    }
+
+//    if (!pc->isVisible() || !pc->isEnabled())
+//    {
+//        ccConsole::Error("Points must be visible!");
+//        return;
+//    }
+
+//    if (!m_plpDlg)
+//    {
+//        m_plpDlg = new ccPointListPickingDlg(m_pickingHub, this);
+//        connect(m_plpDlg, &ccOverlayDialog::processFinished, this, &MainWindow::deactivatePointListPickingMode);
+
+//        registerOverlayDialog(m_plpDlg, Qt::TopRightCorner);
+//    }
+
+//    //DGM: we must update marker size spin box value (as it may have changed by the user with the "display dialog")
+//    m_plpDlg->markerSizeSpinBox->setValue(win->getDisplayParameters().labelMarkerSize);
+
+//    m_plpDlg->linkWith(win);
+//    m_plpDlg->linkWithCloud(pc);
+
+//    freezeUI(true);
+
+//    //we disable all other windows
+//    disableAllBut(win);
+
+//    if (!m_plpDlg->start())
+//        deactivatePointListPickingMode(false);
+//    else
+//        updateOverlayDialogsPlacement();
+//}

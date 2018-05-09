@@ -39,6 +39,5 @@ HEADERS += \
 
 
 FORMS += \
-        qrimacdlg.ui \
-    interpolationDlg.ui
+        qrimacdlg.ui
 
