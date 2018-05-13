@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include <mainwindow.h>
 
 
 //CClib
@@ -50,11 +51,15 @@ ccClassification::ccClassification()
 
 float ccClassification::distanceEucl(ChunkedPointCloud* theCloud1, unsigned iPoint1,ChunkedPointCloud* theCloud2, unsigned iPoint2, unsigned nbSF)
 {
+    // theCloud1 : premier nuage
+    // iPoint1 : indice du point considéré dans le premier nuage
+    // theCloud2 : second nuage
+    // iPoint2 : induce du point considéré dans le second nuage
 
     // on considere que les deux points ont le meme nombre de champs scalaires
-    unsigned res = 0;
-    unsigned val1 = 0;
-    unsigned val2 = 0;
+    float res = 0;
+    float val1 = 0;
+    float val2 = 0;
     for(unsigned i=0; i<nbSF; ++i)
     {
         // on se place dans le champ scalaire a considerer
@@ -74,107 +79,146 @@ float ccClassification::distanceEucl(ChunkedPointCloud* theCloud1, unsigned iPoi
 void ccClassification::KMeans(ChunkedPointCloud* theCloud, unsigned nbIteration, unsigned nbClasse)
 {
     unsigned n = theCloud->size();
+    // n : nombre de point du nuage theCloud
         if (n == 0)
             std::cout << "Erreur..." << std::endl;
 
     unsigned nbSF = theCloud->CCLib::ChunkedPointCloud::getNumberOfScalarFields() ;
-
-    for (unsigned i=0; i<4; ++i)
-    {
-        std::cout << "Nb Champs Scalaires " << theCloud->CCLib::ChunkedPointCloud::getNumberOfScalarFields() << std::endl;
-        std::cout << "Point " << i << std::endl;
-        const char champ1[] = "Scalar field";
-        const char champ2[] = "PIR";
-        const char champ3[] = "SF2";
-        const char champ4[] = "SF3";
-        ScalarType V1 = theCloud->CCLib::ChunkedPointCloud::getScalarFieldIndexByName(champ1);
-        ScalarType V2 = theCloud->CCLib::ChunkedPointCloud::getScalarFieldIndexByName(champ2);
-        ScalarType V3 = theCloud->CCLib::ChunkedPointCloud::getScalarFieldIndexByName(champ3);
-        ScalarType V4 = theCloud->CCLib::ChunkedPointCloud::getScalarFieldIndexByName(champ4);
-
-        if (CCLib::ScalarField::ValidValue(V1))
-        {
-
-            int v1 = (int) V1;
-            theCloud->CCLib::ChunkedPointCloud::setCurrentOutScalarField(v1);
-
-            std::cout << theCloud->CCLib::ChunkedPointCloud::getPointScalarValue(i) << std::endl;
-        }
-
-        if (CCLib::ScalarField::ValidValue(V2))
-        {
-
-            int v2 = (int) V2;
-            theCloud->CCLib::ChunkedPointCloud::setCurrentOutScalarField(v2);
-
-            std::cout << theCloud->CCLib::ChunkedPointCloud::getPointScalarValue(i) << std::endl;
-        }
-
-        if (CCLib::ScalarField::ValidValue(V3))
-        {
-
-            int v3 = (int) V3;
-            theCloud->CCLib::ChunkedPointCloud::setCurrentOutScalarField(v3);
-
-            std::cout << theCloud->CCLib::ChunkedPointCloud::getPointScalarValue(i) << std::endl;
-        }
-
-        if (CCLib::ScalarField::ValidValue(V4))
-        {
-
-            int v4 = (int) V4;
-            theCloud->CCLib::ChunkedPointCloud::setCurrentOutScalarField(v4);
-
-            std::cout << theCloud->CCLib::ChunkedPointCloud::getPointScalarValue(i) << std::endl;
-        }
-    }
+    // nbSF : nombre de champs scalaires avant l'ajout du champ "classe"
 
     // ajout d'un champ scalaire de classe
     theCloud->ChunkedPointCloud::addScalarField("classe");
 
-    // creation des centroides
-    ChunkedPointCloud* centroides;
+    // creation du nuage des centroides
+    ChunkedPointCloud* centroides = new ChunkedPointCloud();
 
-    centroides->reserve(nbClasse);
+    centroides->reserve(nbClasse*(nbSF+1)*8);
 
     int nb_aleatoire = 0;
     srand(time(NULL)); // initialisation de rand
 
-    for(unsigned i=0; i<nbClasse; i++){
+    // Ajout des champs scalaires au nuage centroides
+    for(unsigned j=0;j<nbSF+1;++j)
+    {
+        std::string s = "SF_"+std::to_string(j);
+        char const *nom = s.c_str();
+        centroides->ChunkedPointCloud::addScalarField(nom);
+        unsigned index_tmp = centroides->CCLib::ChunkedPointCloud::getScalarFieldIndexByName(nom);
+        CCLib::ScalarField* sf = centroides->CCLib::ChunkedPointCloud::getScalarField(index_tmp);
+        sf->reserve(nbSF*10); // A REGLER !!!!!!!
+    }
+
+    // Initialisation de centroides a partir de points choisis aleatoirement
+    for(unsigned i=0; i<nbClasse; i++)
+    {
         nb_aleatoire = rand()%n;
         const CCVector3 point =  *theCloud->getPoint(nb_aleatoire);
         centroides->ChunkedPointCloud::addPoint(point);
+
+        for(unsigned j=0;j<nbSF;++j)
+        {
+            std::cout<<"Dans for 2"<<std::endl;
+
+            // on se place dans le champ scalaire a considerer
+            centroides->CCLib::ChunkedPointCloud::setCurrentInScalarField(j);
+            theCloud->CCLib::ChunkedPointCloud::setCurrentOutScalarField(j);
+            // on recupere la valeur du champ scalaire du nuage
+            float val_SF = theCloud->CCLib::ChunkedPointCloud::getPointScalarValue(nb_aleatoire);
+            // on initialise le champ scalaire
+            centroides->CCLib::ChunkedPointCloud::setPointScalarValue(j, val_SF);
+        }
+        // on se place dans le champ scalaire de classe
+        centroides->CCLib::ChunkedPointCloud::setCurrentInScalarField(nbSF);
+        // on l'initialise à i pour le point d'indice i
+        centroides->CCLib::ChunkedPointCloud::setPointScalarValue(i, i);
         printf("%d ",nb_aleatoire);
     }
 
+    std::cout<<std::endl<<"Avant iterations"<<std::endl;
 
     // boucle des iterations
     for(unsigned iter=0; iter<nbIteration; ++iter)
     {
+        std::cout<<"Iteration "<< iter <<std::endl;
+
         //boucle sur les points
         for(unsigned i=0; i<n; ++i)
         {
-            float minDist = -1; // à modifier !
+            std::cout<<"Point "<<i<<std::endl;
+
+
+            float minDist = 9999999999999; // à modifier !
             unsigned j_min = 0;
+
             //boucle sur les centroides
             for(unsigned j=0; j<nbClasse;++j)
             {
-                if (minDist < ccClassification::distanceEucl(theCloud, i, centroides, j, nbSF))
+                // si la distance au centroide est inferieure a la distance mini a un centroide
+                if (minDist > ccClassification::distanceEucl(theCloud, i, centroides, j, nbSF))
                 {
+
+                    // on attribut a minDist la valeur de la nouvelle distance
                     minDist = ccClassification::distanceEucl(theCloud, i, centroides, j, nbSF);
+                    // on attribut a l'indice du centroide le plus proche l'indice du centroide courant
                     j_min = j;
                 }
             }
-            theCloud->CCLib::ChunkedPointCloud::setCurrentOutScalarField(nbSF+1);
+            // on se place dans le champ scalaire de la classe
+            theCloud->CCLib::ChunkedPointCloud::setCurrentInScalarField(nbSF);
+            // on attribut au point d'indice i le centroide d'indice j_min
             theCloud->CCLib::ChunkedPointCloud::setPointScalarValue(i, j_min);
 
+
             // recalcul des champs scalaires des centroides
+            for(unsigned l=0; l<nbClasse; ++l) // boucle sur les centroides
+            {
+                // mettre les SF des centroides à 0
+                for(unsigned i_SF=0; i_SF<nbSF; ++i_SF)
+                {
+                    // on se place dans le champ scalaire a considerer
+                    centroides->CCLib::ChunkedPointCloud::setCurrentOutScalarField(i_SF);
+                    // on initialise la valeur a 0
+                    centroides->CCLib::ChunkedPointCloud::setPointScalarValue(l, 0);
+                }
 
+
+                for(unsigned k=0; k<n; ++k) // boucle sur les points
+                {
+                    unsigned cpt_modif = 0;
+                    // on se place dans le SF de la classe
+                    theCloud->CCLib::ChunkedPointCloud::setCurrentOutScalarField(nbSF);
+                    // si la valeur de classe = centroide qu'on considere
+                    if (theCloud->getPointScalarValue(k) == l)
+                    {
+                        cpt_modif += 1;
+
+                        // pour chaque SF du centroide : += SF du point
+                        for(unsigned i_SF=0; i_SF<nbSF; ++i_SF)
+                        {
+                            // on se place dans le champ scalaire a considerer
+                            theCloud->CCLib::ChunkedPointCloud::setCurrentOutScalarField(i_SF);
+                            centroides->CCLib::ChunkedPointCloud::setCurrentOutScalarField(i_SF);
+                            // on recupere la valeur correspondante
+                            float val1 = theCloud->CCLib::ChunkedPointCloud::getPointScalarValue(k);
+                            float val2 = centroides->CCLib::ChunkedPointCloud::getPointScalarValue(l);
+                            // on ajoute a la variable resultat la diffence des valeurs au carre
+                            float sum = val1+val2;
+                            centroides->CCLib::ChunkedPointCloud::setPointScalarValue(l, sum);
+                        }
+                    }
+
+                    for(unsigned i_SF=0; i_SF<nbSF; ++i_SF)
+                    {
+                        // on se place dans le champ scalaire a considerer
+                        centroides->CCLib::ChunkedPointCloud::setCurrentOutScalarField(i_SF);
+                        // on initialise la valeur a 0
+                        float val = centroides->CCLib::ChunkedPointCloud::getPointScalarValue(l)/cpt_modif;
+
+                        centroides->CCLib::ChunkedPointCloud::setPointScalarValue(l, val);
+                    }
+                }
+            }
         }
-
-
     }
-
-
-
+    delete centroides;
 }
