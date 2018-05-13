@@ -66,8 +66,6 @@ qRIMACdlg::qRIMACdlg(QWidget *parent) :
 
     //VERITE TERRAIN
     QObject::connect(ui->VT_nuage,SIGNAL(released()),this,SLOT(VT_nuage()));
-    QObject::connect(ui->select_point,SIGNAL(released()),this,SLOT(select_point()));
-
 
 }
 
@@ -230,7 +228,7 @@ void qRIMACdlg::lancer_classif()
     this->m_selectedEntities = m_app->getSelectedEntities();
     ccClassification classif;
     ccPointCloud* pc = static_cast<ccPointCloud*>(m_selectedEntities[0]);
-    classif.KMeans(pc, 3, 10);//voir comment récupérer valeurs souhaitées
+    classif.KMeans(pc);
 }
 
 
@@ -266,30 +264,3 @@ void qRIMACdlg::VT_nuage()
     m_app->addToDB(file);
 
 }
-
-//void qRIMACdlg::select_point()
-//{
-//    this-> m_selectedEntities= m_app->getSelectedEntities();
-
-//    this-> m_pickingHub = this->m_app->pickingHub();
-
-
-//    ccPointCloud* pc = ccHObjectCaster::ToPointCloud(m_selectedEntities[0]);
-//        if (!pc)
-//        {
-//            ccConsole::Error("Wrong type of entity");
-//            return;
-//        }
-//        if (!pc->isVisible() || !pc->isEnabled())
-//            {
-//                ccConsole::Error("Points must be visible!");
-//                return;
-//            }
-//        if (!m_plpDlg)
-//           {
-//               // m_plpDlg = new ccPointListPickingDlg(m_pickingHub, this);
-
-//           }
-
-
-//}

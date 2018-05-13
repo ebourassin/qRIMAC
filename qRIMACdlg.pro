@@ -28,17 +28,20 @@ SOURCES += \
         qrimacdlg.cpp \
         ccclassification.cpp \
         qRIMACPlugin.cpp \
-    ccInterpolationDlg.cpp
+    ccInterpolationDlg.cpp \
+    ccinterpolation.cpp
 
 
 HEADERS += \
         qrimacdlg.h \
     ccclassification.h \
     qRIMACPlugin.h \
-    ccInterpolationDlg.h
+    ccInterpolationDlg.h \
+    ccinterpolation.h
 
 
 FORMS += \
         qrimacdlg.ui \
-    interpolationDlg.ui
+    interpolationDlg.ui \
+    qrimacdlg.ui
 

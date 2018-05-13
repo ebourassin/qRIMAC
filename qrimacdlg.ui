@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="Transfertattributs">
     <attribute name="title">
@@ -32,34 +32,13 @@
     <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
-       <x>40</x>
-       <y>40</y>
+       <x>90</x>
+       <y>100</y>
        <width>326</width>
        <height>146</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <widget class="QLabel" name="rvb">
-          <property name="text">
-           <string>NUAGE RVB</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="RVB_IN"/>
-        </item>
-        <item>
-         <widget class="QToolButton" name="RVB_IN_SEARCH">
-          <property name="text">
-           <string>...</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
       <item row="1" column="0">
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
@@ -102,13 +81,34 @@
         </item>
        </layout>
       </item>
+      <item row="0" column="0">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QLabel" name="rvb">
+          <property name="text">
+           <string>NUAGE RVB</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="RVB_IN"/>
+        </item>
+        <item>
+         <widget class="QToolButton" name="RVB_IN_SEARCH">
+          <property name="text">
+           <string>...</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
      </layout>
     </widget>
     <widget class="QLabel" name="select_cloud">
      <property name="geometry">
       <rect>
-       <x>60</x>
-       <y>0</y>
+       <x>50</x>
+       <y>40</y>
        <width>161</width>
        <height>31</height>
       </rect>
@@ -117,107 +117,17 @@
       <string>Sélection des nuages:</string>
      </property>
     </widget>
-    <widget class="QWidget" name="layoutWidget">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>180</y>
-       <width>265</width>
-       <height>26</height>
-      </rect>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_4">
-      <item>
-       <widget class="QLabel" name="dist_voxel">
-        <property name="text">
-         <string>Distance max inter-voxel :</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QDoubleSpinBox" name="dist_choice"/>
-      </item>
-      <item>
-       <widget class="QLabel" name="dist_unite">
-        <property name="text">
-         <string>cm</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-    <widget class="QCheckBox" name="sup_pts_sans_ppv">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>220</y>
-       <width>221</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Supprimer les points sans ppv</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="name_out">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>250</y>
-       <width>171</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Nom du nuage de sortie :</string>
-     </property>
-    </widget>
-    <widget class="QWidget" name="layoutWidget">
-     <property name="geometry">
-      <rect>
-       <x>50</x>
-       <y>270</y>
-       <width>381</width>
-       <height>24</height>
-      </rect>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_5">
-      <item>
-       <widget class="QLineEdit" name="out"/>
-      </item>
-      <item>
-       <widget class="QToolButton" name="explorateur">
-        <property name="text">
-         <string>...</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
     <widget class="QPushButton" name="lancer">
      <property name="geometry">
       <rect>
-       <x>120</x>
-       <y>300</y>
+       <x>100</x>
+       <y>290</y>
        <width>291</width>
        <height>32</height>
       </rect>
      </property>
      <property name="text">
       <string>Lancer le transfert d'attributs</string>
-     </property>
-    </widget>
-    <widget class="QProgressBar" name="bar_progression">
-     <property name="geometry">
-      <rect>
-       <x>120</x>
-       <y>330</y>
-       <width>291</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="value">
-      <number>24</number>
      </property>
     </widget>
    </widget>
@@ -285,7 +195,7 @@
       <rect>
        <x>50</x>
        <y>30</y>
-       <width>271</width>
+       <width>391</width>
        <height>24</height>
       </rect>
      </property>
@@ -426,25 +336,12 @@
       </item>
      </layout>
     </widget>
-    <widget class="QProgressBar" name="progressBar">
-     <property name="geometry">
-      <rect>
-       <x>120</x>
-       <y>330</y>
-       <width>271</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="value">
-      <number>24</number>
-     </property>
-    </widget>
    </widget>
    <widget class="QWidget" name="tab">
     <attribute name="title">
      <string>Vérité terrain</string>
     </attribute>
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="select_point">
      <property name="geometry">
       <rect>
        <x>160</x>
@@ -496,12 +393,12 @@
       <string>Enregistrer la vérité terrain</string>
      </property>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>50</x>
        <y>30</y>
-       <width>295</width>
+       <width>381</width>
        <height>24</height>
       </rect>
      </property>
@@ -514,10 +411,10 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit"/>
+       <widget class="QLineEdit" name="VT"/>
       </item>
       <item>
-       <widget class="QToolButton" name="toolButton">
+       <widget class="QToolButton" name="VT_nuage">
         <property name="text">
          <string>...</string>
         </property>
@@ -525,12 +422,12 @@
       </item>
      </layout>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>50</x>
        <y>120</y>
-       <width>246</width>
+       <width>381</width>
        <height>23</height>
       </rect>
      </property>
@@ -547,12 +444,12 @@
       </item>
      </layout>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>50</x>
        <y>250</y>
-       <width>264</width>
+       <width>381</width>
        <height>24</height>
       </rect>
      </property>

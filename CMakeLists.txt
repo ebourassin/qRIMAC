@@ -12,10 +12,6 @@ if (INSTALL_QRIMAC_PLUGIN)
     
     include( ${CMAKE_CURRENT_SOURCE_DIR}/../../plugins/CMakePluginTpl.cmake)
 
-    #we need ccOverlay classes
-    file( GLOB CC_PLUGIN_CUSTOM_HEADER_LIST ${CloudCompare_QCC_DIR}/ccOverlayDialog*.h )
-    file( GLOB CC_PLUGIN_CUSTOM_SOURCE_LIST ${CloudCompare_QCC_DIR}/ccOverlayDialog*.cpp )
-
     file( GLOB CC_PLUGIN_CUSTOM_HEADER_LIST ${CloudCompare_QCC_DIR}/ccItemSelectionDlg*.h)
     file( GLOB CC_PLUGIN_CUSTOM_SOURCE_LIST ${CloudCompare_QCC_DIR}/ccItemSelectionDlg*.cpp)
     set( CC_PLUGIN_CUSTOM_UI_LIST ${CloudCompare_QCC_DIR}/ui_templates/itemSelectionDlg.ui )

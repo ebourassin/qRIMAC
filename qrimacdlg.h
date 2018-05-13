@@ -2,6 +2,7 @@
 #define QRIMACDLG_H
 
 #include <QDialog>
+//#include "ccPointListPickingDlg.h"
 
 //qCC
 //#include <ccGLWindow.h>
@@ -23,16 +24,15 @@ public:
     ccGLWindow* win;
     ccMainAppInterface* m_app;
 
-    bool interpolate(const ccHObject::Container &selectedEntities);
-
    // void doActionInterpolateScalarFields();
 
 
 private:
     Ui::qRIMACdlg *ui;
 
-    //! Currently selected entities;
     ccHObject::Container m_selectedEntities;
+    ccPickingHub* m_pickingHub;
+   // ccPointListPickingDlg* m_plpDlg;
 
 
 public slots:
@@ -42,6 +42,8 @@ public slots:
     void lancer();
     void lancer_classif();
     void choix_nuage();
+    void VT_nuage();
+    //void select_point();
 };
 
 #endif // QRIMACDLG_H
