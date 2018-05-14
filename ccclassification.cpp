@@ -131,6 +131,7 @@ void ccClassification::KMeans(ChunkedPointCloud* theCloud, unsigned nbIteration,
         centroides->CCLib::ChunkedPointCloud::setPointScalarValue(i, i);
     }
 
+    std::cout<<std::endl<<"Avant iterations"<<std::endl;
 
     // boucle des iterations
     for(unsigned iter=0; iter<nbIteration; ++iter)

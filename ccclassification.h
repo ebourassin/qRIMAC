@@ -1,10 +1,14 @@
 #ifndef CCCLASSIFICATION_H
 #define CCCLASSIFICATION_H
 
+#include "ccMainAppInterface.h"
+
 
 namespace CCLib
 {
 class ChunkedPointCloud;
+class ccHObject;
+class MainWindow;
 }
 
 class ccClassification
