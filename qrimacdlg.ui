@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="Transfertattributs">
     <attribute name="title">
@@ -241,14 +241,17 @@
         <property name="editable">
          <bool>true</bool>
         </property>
+        <property name="currentText">
+         <string>KMeans</string>
+        </property>
         <item>
          <property name="text">
-          <string>...</string>
+          <string>KMeans</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>k-means</string>
+          <string>Autre Classifieur</string>
          </property>
         </item>
        </widget>
@@ -302,35 +305,6 @@
        <widget class="QSpinBox" name="choix_nb_iterations">
         <property name="minimum">
          <number>1</number>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-    <widget class="QWidget" name="layoutWidget">
-     <property name="geometry">
-      <rect>
-       <x>50</x>
-       <y>260</y>
-       <width>431</width>
-       <height>24</height>
-      </rect>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_10">
-      <item>
-       <widget class="QLabel" name="classif">
-        <property name="text">
-         <string>Classification :</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="out_classif"/>
-      </item>
-      <item>
-       <widget class="QToolButton" name="out_explorateur">
-        <property name="text">
-         <string>...</string>
         </property>
        </widget>
       </item>
