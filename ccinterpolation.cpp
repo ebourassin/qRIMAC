@@ -44,8 +44,6 @@ ccInterpolation::ccInterpolation()
 
 bool ccInterpolation::interpolate(const ccHObject::Container selectedEntities, ccMainAppInterface* m_app)
 {
-    std::cout << "Dans interpolate you motherfucker" << std::endl;
-
     if (selectedEntities.size() != 2)
         {
             ccConsole::Error("Select 2 entities (clouds or meshes)!");
@@ -81,15 +79,12 @@ bool ccInterpolation::interpolate(const ccHObject::Container selectedEntities, c
         unsigned sfCount = source->getNumberOfScalarFields();
         if (sfCount == 1)
         {
-            std::cout << "Dans 1er if" << std::endl;
             sfIndexes.push_back(0);
         }
         else if (sfCount > 1)
         {
-            std::cout << "Dans else if" << std::endl;
 
             ccItemSelectionDlg isDlg(true, m_app->getMainWindow(), "entity");
-            std::cout << "Passé 1" << std::endl;
 
             QStringList scalarFields;
             {
@@ -116,7 +111,6 @@ bool ccInterpolation::interpolate(const ccHObject::Container selectedEntities, c
             std::cout << "Dans else" << std::endl;
             assert(false);
         }
-        std::cout << "Passé else final" << std::endl;
 
     }
     catch (const std::bad_alloc&)
@@ -124,7 +118,6 @@ bool ccInterpolation::interpolate(const ccHObject::Container selectedEntities, c
         ccConsole::Error("Not enough memory");
         return false;
     }
-    std::cout << "Passé catch" << std::endl;
 
 
     //semi-persistent parameters
