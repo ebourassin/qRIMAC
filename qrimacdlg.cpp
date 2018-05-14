@@ -230,7 +230,9 @@ void qRIMACdlg::lancer_classif()
     this->m_selectedEntities = m_app->getSelectedEntities();
     ccClassification classif;
     ccPointCloud* pc = static_cast<ccPointCloud*>(m_selectedEntities[0]);
-    classif.KMeans(pc, 1, 1);//voir comment récupérer valeurs souhaitées
+    unsigned nb_class = ui->choix_nb_classes->value();
+    unsigned nb_ite = ui->choix_nb_iterations->value();
+    classif.KMeans(pc, nb_ite, nb_class);//voir comment récupérer valeurs souhaitées
 }
 
 
