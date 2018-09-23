@@ -6,7 +6,6 @@
 #include "math.h"
 
 #include <QProgressDialog>
-
 #include <mainwindow.h>
 
 
@@ -20,7 +19,6 @@
 #include "ccConsole.h"
 #include "ccEntityAction.h"
 #include "ccOrderChoiceDlg.h"
-
 
 #include "ccInterpolationDlg.h"
 #include "ccItemSelectionDlg.h"
@@ -52,19 +50,19 @@ qRIMACdlg::qRIMACdlg(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    //Connexion of butons
+    //Connection aux boutons 
 
-    //TRANSFERT D'ATTRIBUTS
+    //Transfert d'attributs 
     QObject::connect(ui->RVB_IN_SEARCH,SIGNAL(released()),this,SLOT(RVB_IN_SEARCH()));
     QObject::connect(ui->PIR_IN_SEARCH,SIGNAL(released()),this,SLOT(PIR_IN_SEARCH()));
     QObject::connect(ui->SWIR_IN_SEARCH,SIGNAL(released()),this,SLOT(SWIR_IN_SEARCH()));
     QObject::connect(ui->lancer,SIGNAL(released()),this,SLOT(lancer()));
 
-    //CLASSIFICATION
+    //Classification
     QObject::connect(ui->choix_nuage,SIGNAL(released()),this,SLOT(choix_nuage()));
     QObject::connect(ui->lancer_classif,SIGNAL(released()),this,SLOT(lancer_classif()));
 
-    //VERITE TERRAIN
+    //Vérité terrain
     QObject::connect(ui->VT_nuage,SIGNAL(released()),this,SLOT(VT_nuage()));
     QObject::connect(ui->select_point,SIGNAL(released()),this,SLOT(select_point()));
 
@@ -76,14 +74,15 @@ qRIMACdlg::~qRIMACdlg()
     delete ui;
 }
 
-//TRANSFERT D'ATTRIBUTS
+//transfert d'attributs 
 
-//permet de choisir notre nuage de points RVB
+//Fonction permettant de choisir notre nuage de points RVB
+
 void qRIMACdlg::RVB_IN_SEARCH()
-{
-
-
-   //QDir::homePath() : In order to be able work on several computer and several environment
+{  
+   
+    
+   //QDir::homePath() : afin de pouvoir travailler sur plusieurs ordinateurs et plusieurs environnements
    QString fileName = QFileDialog::getOpenFileName(this, tr("Sélectionner le fichier  contenant les nuages de points"),
                                                                 QDir::homePath(),
                                                                 tr("*.ply"));
@@ -105,17 +104,18 @@ void qRIMACdlg::RVB_IN_SEARCH()
 
     CC_FILE_ERROR result = CC_FERR_NO_ERROR;
     static ccHObject* file = FileIOFilter::LoadFromFile(fileName, parameters, result);
-
+    
+    //Affiche le nom du fichier choisi dans la barre du nuage 1
     ui->RVB_IN->setText(fileName);
+    //Ouvre le nuage de points dans la vue principale
     m_app->addToDB(file);
 
-
 }
-//permet de choisir notre nuage de points PIR
+
+//Fonction permettant de choisir notre nuage de points PIR
 void qRIMACdlg::PIR_IN_SEARCH()
 {
 
-   //QDir::homePath() : In order to be able work on several computer and several environment
    QString fileNamePIR = QFileDialog::getOpenFileName(this, tr("Sélectionner le fichier contenant les nuages de points"),
                                                                 QDir::homePath(),
                                                                 tr("*.ply"));
@@ -138,15 +138,17 @@ void qRIMACdlg::PIR_IN_SEARCH()
     CC_FILE_ERROR result = CC_FERR_NO_ERROR;
     static ccHObject* filePIR = FileIOFilter::LoadFromFile(fileNamePIR, parameters, result);
 
+     //Affiche le nom du fichier choisi dans la barre du nuage 2
     ui->PIR_IN->setText(fileNamePIR);
+    //Ouvre le nuage de points dans la vue principale
     m_app->addToDB(filePIR);
 
 }
 
-//permet de choisir notre nuage de points SWIR
+//Fonction permettant de choisir notre nuage de points SWIR
 void qRIMACdlg::SWIR_IN_SEARCH()
 {
-   //QDir::homePath() : In order to be able work on several computer and several environment
+
    QString fileName = QFileDialog::getOpenFileName(this, tr("Sélectionner le fichier contenant les nuages de points"),
                                                                 QDir::homePath(),
                                                                 tr("*.ply"));
@@ -169,16 +171,15 @@ void qRIMACdlg::SWIR_IN_SEARCH()
 
     CC_FILE_ERROR result = CC_FERR_NO_ERROR;
     static ccHObject* file = FileIOFilter::LoadFromFile(fileName, parameters, result);
-
+    
+    //Affiche le nom du fichier choisi dans la barre du nuage 3
     ui->SWIR_IN->setText(fileName);
+    //Ouvre le nuage de points dans la vue principale
     m_app->addToDB(file);
-
-
 }
 
 
-
-
+//Fonction permettant de lancer le transfert d'attributs d'un nuage sur un autre lorsqu'on appuie sur le bouton 'lancer le transfert d'attributs'
 void qRIMACdlg::lancer()
 {
     this->m_selectedEntities = m_app->getSelectedEntities();
@@ -190,12 +191,12 @@ void qRIMACdlg::lancer()
 }
 
 
- //CLASSIFICATION
+//Classification
 
+//Fonction permettant d'ouvrir le nuage de point pour réaliser la classification 
 
 void qRIMACdlg::choix_nuage()
 {
-   //QDir::homePath() : In order to be able work on several computer and several environment
    QString fileName = QFileDialog::getOpenFileName(this, tr("Sélectionner le fichier contenant les nuages de points à classifier"),
                                                                 QDir::homePath(),
                                                                 tr("*.ply"));
@@ -213,32 +214,34 @@ void qRIMACdlg::choix_nuage()
        }
 
 
-    //the same for 'addToDB' (if the first one is not supported, or if the scale remains too big)
     CCVector3d addCoordinatesShift(0, 0, 0);
 
     CC_FILE_ERROR result = CC_FERR_NO_ERROR;
     static ccHObject* file = FileIOFilter::LoadFromFile(fileName, parameters, result);
 
+    //Affiche le nom du fichier choisi dans la barre du nuage 3
     ui->choix->setText(fileName);
+    //Ouvre le nuage de points dans la vue principale
     m_app->addToDB(file);
 
 }
 
+//Fonction permattant de lancer la classification lorsque l'on appuie sur le bouton 'lancer la classification'
 void qRIMACdlg::lancer_classif()
 {
 
     this->m_selectedEntities = m_app->getSelectedEntities();
     ccClassification classif;
     ccPointCloud* pc = static_cast<ccPointCloud*>(m_selectedEntities[0]);
-    classif.KMeans(pc, 3, 10);//voir comment récupérer valeurs souhaitées
+    classif.KMeans(pc, 3, 10); //reste à voir comment récupérer les valeurs souhaitées
 }
 
 
-//VERITE TERRAIN
+//vérité terrain
 
 void qRIMACdlg::VT_nuage()
 {
-   //QDir::homePath() : In order to be able work on several computer and several environment
+   
    QString fileName = QFileDialog::getOpenFileName(this, tr("Sélectionner le fichier contenant les nuages de points à classifier"),
                                                                 QDir::homePath(),
                                                                 tr("*.ply"));
