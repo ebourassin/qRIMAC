@@ -25,7 +25,6 @@
 namespace CCLib
 {
 class ChunkedPointCloud;
-class ccHObject;
 class MainWindow;
 }
 
